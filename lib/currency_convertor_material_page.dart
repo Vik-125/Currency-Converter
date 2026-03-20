@@ -1,0 +1,124 @@
+import 'package:http/http.dart' as http; // this lib is used to make a web req(API call).
+import 'dart:convert';          // This lib is used to convert the JSON data into dart readable data
+import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+
+// To create a variable that stores the input amount
+// To crate a function that multiplies the input money with the value of indian rupee
+// to store the value, we get after conversion
+// Display the amount.
+
+class CurrencyConvertorMaterialPage extends StatefulWidget {
+  const CurrencyConvertorMaterialPage({super.key});
+  @override
+  State<CurrencyConvertorMaterialPage> createState() =>
+      _CurrencyConvertorMaterialPageState();
+}
+class _CurrencyConvertorMaterialPageState
+    extends State<CurrencyConvertorMaterialPage> {
+  double result = 0;
+  final TextEditingController textEditingController = TextEditingController();
+
+  Future<void> convertCurrency() async{
+  final double inputAmt = double.tryParse(textEditingController.text) ?? 0;
+
+  if(inputAmt <= 0) return;
+
+  try{
+    final url = Uri.parse('https://api.frankfurter.app/latest?base=USD');
+
+    final response = await http.get(url);
+
+    if(response.statusCode == 200){
+      final Map<String, dynamic> data = jsonDecode(response.body);
+
+      final double exchangeRate = data['rates']['INR'];
+
+      setState((){
+        result = inputAmt*exchangeRate;
+      });
+    } else {
+        if(kDebugMode) print('Server error: ${response.statusCode}');
+      }
+    }
+    catch(e){
+      if(kDebugMode) print('Error : $e');
+    }
+  }
+  @override
+  Widget build(BuildContext context) {
+    // here we have mentioned Border function , so that we can use it below in the code.
+    final border = OutlineInputBorder(
+      borderSide: BorderSide(
+        color: const Color.fromARGB(255, 226, 52, 40),
+        width: 2,
+        style: BorderStyle.solid,
+        strokeAlign: BorderSide.strokeAlignInside,
+      ),
+      borderRadius: BorderRadius.all(Radius.circular(60)),
+    );
+    return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 255, 124, 168),
+      appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 39, 117, 252),
+        title: const Text(
+          'Currency Convertor',
+          style: TextStyle(fontWeight: FontWeight.w700),
+        ),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              '₹${result.toString()}',
+              style: TextStyle(
+                fontSize: 32.2,
+                fontWeight: FontWeight.bold,
+                color: const Color.fromARGB(255, 0, 0, 0),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(18.0),
+              child: TextField(
+                controller: textEditingController,
+                style: const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+                decoration: InputDecoration(
+                  hintText: "Enter amount in INR",
+                  hintStyle: const TextStyle(
+                    color: Color.fromARGB(255, 0, 0, 0),
+                  ),
+                  prefixIcon: const Icon(Icons.monetization_on),
+                  prefixIconColor: Colors.green,
+                  filled: true,
+                  fillColor: Colors.white,
+                  enabledBorder: border,
+                  focusedBorder: border,
+                ),
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
+              ),
+            ),
+            // Button
+
+            // raised
+            // appears
+            TextButton(
+              onPressed: convertCurrency,
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.black,
+                minimumSize: Size(100, 50),
+              ),
+              child: const Text(
+                'Convert',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
