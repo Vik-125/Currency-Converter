@@ -17,12 +17,26 @@ class CurrencyConvertorMaterialPage extends StatefulWidget {
 class _CurrencyConvertorMaterialPageState
     extends State<CurrencyConvertorMaterialPage> {
   double result = 0;
+  String resultText = "";
   final TextEditingController textEditingController = TextEditingController();
 
   Future<void> convertCurrency() async{
-  final double inputAmt = double.tryParse(textEditingController.text) ?? 0;
+  final String inputText = textEditingController.text;
 
-  if(inputAmt <= 0) return;
+  final double? inputAmt = double.tryParse(inputText);
+
+  if(inputAmt == null){
+    setState(() {
+      resultText = "That not a Number , you DUMB!!!";
+    });
+    return;
+  }
+  if(inputAmt == 0){
+    setState(() {
+      resultText = "Broke!!!";
+    });
+    return;
+  }
 
   try{
     final url = Uri.parse('https://api.frankfurter.app/latest?base=USD');
@@ -35,7 +49,7 @@ class _CurrencyConvertorMaterialPageState
       final double exchangeRate = data['rates']['INR'];
 
       setState((){
-        result = inputAmt*exchangeRate;
+        resultText = (inputAmt*exchangeRate).toString();
       });
     } else {
         if(kDebugMode) print('Server error: ${response.statusCode}');
@@ -71,7 +85,7 @@ class _CurrencyConvertorMaterialPageState
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              '₹${result.toString()}',
+              resultText.isNotEmpty ? resultText : '₹${result!=0 ? result.toStringAsFixed(2) : 0}',
               style: TextStyle(
                 fontSize: 32.2,
                 fontWeight: FontWeight.bold,
@@ -84,7 +98,7 @@ class _CurrencyConvertorMaterialPageState
                 controller: textEditingController,
                 style: const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
                 decoration: InputDecoration(
-                  hintText: "Enter amount in INR",
+                  hintText: "Enter amount in USD",
                   hintStyle: const TextStyle(
                     color: Color.fromARGB(255, 0, 0, 0),
                   ),
@@ -101,7 +115,7 @@ class _CurrencyConvertorMaterialPageState
               ),
             ),
             // Button
-
+    
             // raised
             // appears
             TextButton(
