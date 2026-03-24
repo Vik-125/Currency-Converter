@@ -5,7 +5,7 @@ void main() {
   runApp(const MyApp());
 }
 
-// types of widgets
+// Types of widgets
 // 1. Stateless Widget
 // 2. Stateful widget
 // 3. inherited widget  ( this is not for UI )

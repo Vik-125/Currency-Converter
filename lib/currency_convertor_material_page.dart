@@ -60,6 +60,11 @@ class _CurrencyConvertorMaterialPageState
     final String inputText = textEditingController.text;
     final double? inputAmt = double.tryParse(inputText);
 
+    if (toCurrency == fromCurrency) {
+      setState(() {
+        resultText = "$inputAmt";
+      });
+    }
     if (inputAmt == null) {
       setState(() {
         resultText = "That not a NUMBER , you DUMB!!!";
@@ -82,11 +87,10 @@ class _CurrencyConvertorMaterialPageState
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(response.body);
-
         final double exchangeRate = data['rates'][toCurrency];
 
         setState(() {
-          resultText = "${(inputAmt * exchangeRate).toString()} $toCurrency";
+          resultText = "${(inputAmt * exchangeRate).toStringAsFixed(2)} $toCurrency";
         });
       } else {
         if (kDebugMode) print('Server error: ${response.statusCode}');
@@ -124,7 +128,7 @@ class _CurrencyConvertorMaterialPageState
             Text(
               resultText.isNotEmpty
                   ? resultText
-                  : '₹${result != 0 ? result.toStringAsFixed(2) : 0}',
+                  : '${result != 0 ? result.toStringAsFixed(2) : 0}',
               style: TextStyle(
                 fontSize: 32.2,
                 fontWeight: FontWeight.bold,
@@ -149,8 +153,8 @@ class _CurrencyConvertorMaterialPageState
 
                   const Padding(
                     padding: const EdgeInsets.only(
-                      left: 20.0, 
-                      right: 20.0, 
+                      left: 20.0,
+                      right: 20.0,
                       top: 0.0,
                       bottom: 0.0,
                     ),
@@ -158,7 +162,6 @@ class _CurrencyConvertorMaterialPageState
                   ),
 
                   DropdownButton<String>(
-                  
                     value: toCurrency,
                     items: currencies
                         .map(
@@ -181,7 +184,7 @@ class _CurrencyConvertorMaterialPageState
                   hintStyle: const TextStyle(
                     color: Color.fromARGB(255, 0, 0, 0),
                   ),
-                  prefixIcon: const Icon(Icons.monetization_on),
+                  prefixIcon: const Icon(Icons.move_down_sharp),
                   prefixIconColor: Colors.green,
                   filled: true,
                   fillColor: Colors.white,
