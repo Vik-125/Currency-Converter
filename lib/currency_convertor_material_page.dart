@@ -1,13 +1,8 @@
-import 'package:http/http.dart'
-    as http; // this lib is used to make a web req(API call).
-import 'dart:convert'; // This lib is used to convert the JSON data into dart readable data
+import 'package:http/http.dart' as http;      // this lib is used to make a web req(API call).
+import 'dart:convert';                        // This lib is used to convert the JSON data into dart readable data
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
-// To create a variable that stores the input amount
-// To crate a function that multiplies the input money with the value of indian rupee
-// to store the value, we get after conversion
-// Display the amount.
 
 class CurrencyConvertorMaterialPage extends StatefulWidget {
   const CurrencyConvertorMaterialPage({super.key});
@@ -103,6 +98,7 @@ class _CurrencyConvertorMaterialPageState
   @override
   Widget build(BuildContext context) {
     // here we have mentioned Border function , so that we can use it below in the code.
+    // For adding styles to the TextField.
     final border = OutlineInputBorder(
       borderSide: BorderSide(
         color: const Color.fromARGB(255, 226, 52, 40),
@@ -111,6 +107,14 @@ class _CurrencyConvertorMaterialPageState
         strokeAlign: BorderSide.strokeAlignInside,
       ),
       borderRadius: BorderRadius.all(Radius.circular(60)),
+    );
+
+    // For adding Style to the Dropdown Buttons.
+    final ddButton = BoxDecoration(
+      color: Colors.white,
+      border: Border.all(color: Colors.black, width: 2),
+      borderRadius: BorderRadius.all(Radius.circular(60)),
+            
     );
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 255, 124, 168),
@@ -140,15 +144,20 @@ class _CurrencyConvertorMaterialPageState
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  DropdownButton<String>(
-                    value: fromCurrency,
-                    items: currencies
-                        .map(
-                          (cur) =>
-                              DropdownMenuItem(value: cur, child: Text(cur)),
-                        )
-                        .toList(),
-                    onChanged: (val) => setState(() => fromCurrency = val!),
+                  Container(
+                    padding: EdgeInsets.only(left: 10,right: 10),
+                    decoration: ddButton,
+                    child: DropdownButton<String>(    
+                      underline: SizedBox(),
+                      value: fromCurrency,
+                      items: currencies
+                          .map(
+                            (cur) =>
+                                DropdownMenuItem(value: cur, child: Text(cur)),
+                          )
+                          .toList(),
+                      onChanged: (val) => setState(() => fromCurrency = val!),
+                    ),
                   ),
 
                   const Padding(
@@ -161,15 +170,20 @@ class _CurrencyConvertorMaterialPageState
                     child: Icon(Icons.arrow_forward),
                   ),
 
-                  DropdownButton<String>(
-                    value: toCurrency,
-                    items: currencies
-                        .map(
-                          (cur) =>
-                              DropdownMenuItem(value: cur, child: Text(cur)),
-                        )
-                        .toList(),
-                    onChanged: (val) => setState(() => toCurrency = val!),
+                  Container(
+                    padding: EdgeInsets.only(left: 10,right: 10),
+                    decoration: ddButton,
+                    child: DropdownButton<String>(
+                      underline: SizedBox(),
+                      value: toCurrency,
+                      items: currencies
+                          .map(
+                            (cur) =>
+                                DropdownMenuItem(value: cur, child: Text(cur)),
+                          )
+                          .toList(),
+                      onChanged: (val) => setState(() => toCurrency = val!),
+                    ),
                   ),
                 ],
               ),
@@ -180,7 +194,7 @@ class _CurrencyConvertorMaterialPageState
                 controller: textEditingController,
                 style: const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
                 decoration: InputDecoration(
-                  hintText: "Enter amount",
+                  hintText: "Enter Amount",
                   hintStyle: const TextStyle(
                     color: Color.fromARGB(255, 0, 0, 0),
                   ),
