@@ -1,8 +1,8 @@
-import 'package:http/http.dart' as http;      // this lib is used to make a web req(API call).
-import 'dart:convert';                        // This lib is used to convert the JSON data into dart readable data
+import 'package:http/http.dart'
+    as http; // this lib is used to make a web req(API call).
+import 'dart:convert'; // This lib is used to convert the JSON data into dart readable data
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-
 
 class CurrencyConvertorMaterialPage extends StatefulWidget {
   const CurrencyConvertorMaterialPage({super.key});
@@ -17,6 +17,8 @@ class _CurrencyConvertorMaterialPageState
   String resultText = "";
   String fromCurrency = "INR";
   String toCurrency = "USD";
+  bool isLoading = false;
+
   final List<String> currencies = [
     "AUD",
     "BRL",
@@ -57,7 +59,7 @@ class _CurrencyConvertorMaterialPageState
 
     if (toCurrency == fromCurrency) {
       setState(() {
-        resultText = "$inputAmt";
+        resultText = "$inputAmt $toCurrency";
       });
     }
     if (inputAmt == null) {
@@ -72,8 +74,10 @@ class _CurrencyConvertorMaterialPageState
       });
       return;
     }
+    setState(() => isLoading = true);
 
     try {
+      //await Future.delayed(const Duration(seconds: 3));
       final url = Uri.parse(
         'https://api.frankfurter.app/latest?base=$fromCurrency',
       );
@@ -85,13 +89,16 @@ class _CurrencyConvertorMaterialPageState
         final double exchangeRate = data['rates'][toCurrency];
 
         setState(() {
-          resultText = "${(inputAmt * exchangeRate).toStringAsFixed(2)} $toCurrency";
+          resultText =
+              "${(inputAmt * exchangeRate).toStringAsFixed(2)} $toCurrency";
         });
       } else {
         if (kDebugMode) print('Server error: ${response.statusCode}');
       }
     } catch (e) {
       if (kDebugMode) print('Error : $e');
+    } finally {
+      setState(() => isLoading = false);
     }
   }
 
@@ -114,7 +121,6 @@ class _CurrencyConvertorMaterialPageState
       color: Colors.white,
       border: Border.all(color: Colors.black, width: 2),
       borderRadius: BorderRadius.all(Radius.circular(60)),
-            
     );
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 255, 124, 168),
@@ -145,9 +151,9 @@ class _CurrencyConvertorMaterialPageState
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    padding: EdgeInsets.only(left: 10,right: 10),
+                    padding: EdgeInsets.only(left: 10, right: 10),
                     decoration: ddButton,
-                    child: DropdownButton<String>(    
+                    child: DropdownButton<String>(
                       underline: SizedBox(),
                       value: fromCurrency,
                       items: currencies
@@ -171,7 +177,7 @@ class _CurrencyConvertorMaterialPageState
                   ),
 
                   Container(
-                    padding: EdgeInsets.only(left: 10,right: 10),
+                    padding: EdgeInsets.only(left: 10, right: 10),
                     decoration: ddButton,
                     child: DropdownButton<String>(
                       underline: SizedBox(),
@@ -215,15 +221,40 @@ class _CurrencyConvertorMaterialPageState
             // raised
             // appears
             TextButton(
-              onPressed: convertCurrency,
+              onPressed: isLoading ? null : convertCurrency,
               style: TextButton.styleFrom(
                 backgroundColor: Colors.white,
                 foregroundColor: Colors.black,
                 minimumSize: Size(100, 50),
               ),
-              child: const Text(
-                'Convert',
-                style: TextStyle(fontWeight: FontWeight.bold),
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300), // Smooth fade time
+                child: isLoading
+                    ? const Row(
+                        key: ValueKey('loading'),
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.currency_exchange,
+                            size: 18,
+                            color: Colors.green,
+                          ),
+                          SizedBox(width: 8),
+                          Text(
+                            'Processing...',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
+                      )
+                    : const Text(
+                        'Convert',
+                        key: ValueKey('text'),
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
               ),
             ),
           ],
