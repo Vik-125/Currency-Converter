@@ -3,6 +3,7 @@ import 'package:http/http.dart'
 import 'dart:convert'; // This lib is used to convert the JSON data into dart readable data
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:country_flags/country_flags.dart';
 
 class CurrencyConvertorMaterialPage extends StatefulWidget {
   const CurrencyConvertorMaterialPage({super.key});
@@ -19,39 +20,41 @@ class _CurrencyConvertorMaterialPageState
   String toCurrency = "USD";
   bool isLoading = false;
 
-  final List<String> currencies = [
-    "AUD",
-    "BRL",
-    "CAD",
-    "CHF",
-    "CNY",
-    "CZK",
-    "DKK",
-    "EUR",
-    "GBP",
-    "HKD",
-    "HUF",
-    "IDR",
-    "ILS",
-    "INR",
-    "ISK",
-    "JPY",
-    "KRW",
-    "MXN",
-    "MYR",
-    "NOK",
-    "NZD",
-    "PHP",
-    "PLN",
-    "RON",
-    "SEK",
-    "SGD",
-    "THB",
-    "TRY",
-    "USD",
-    "ZAR",
-  ];
+  final Map<String, Map<String, String>> currencyData = {
+    "AUD": {"name": "Australian Dollar", "country": "AU"},
+    "BRL": {"name": "Brazilian Real", "country": "BR"},
+    "CAD": {"name": "Canadian Dollar", "country": "CA"},
+    "CHF": {"name": "Swiss Franc", "country": "CH"},
+    "CNY": {"name": "Chinese Yuan", "country": "CN"},
+    "CZK": {"name": "Czech Koruna", "country": "CZ"},
+    "DKK": {"name": "Danish Krone", "country": "DK"},
+    "EUR": {"name": "Euro", "country": "EU"},
+    "GBP": {"name": "British Pound", "country": "GB"},
+    "HKD": {"name": "Hong Kong Dollar", "country": "HK"},
+    "HUF": {"name": "Hungarian Forint", "country": "HU"},
+    "IDR": {"name": "Indonesian Rupiah", "country": "ID"},
+    "ILS": {"name": "Israeli New Sheqel", "country": "IL"},
+    "INR": {"name": "Indian Rupee", "country": "IN"},
+    "ISK": {"name": "Icelandic Króna", "country": "IS"},
+    "JPY": {"name": "Japanese Yen", "country": "JP"},
+    "KRW": {"name": "South Korean Won", "country": "KR"},
+    "MXN": {"name": "Mexican Peso", "country": "MX"},
+    "MYR": {"name": "Malaysian Ringgit", "country": "MY"},
+    "NOK": {"name": "Norwegian Krone", "country": "NO"},
+    "NZD": {"name": "New Zealand Dollar", "country": "NZ"},
+    "PHP": {"name": "Philippine Peso", "country": "PH"},
+    "PLN": {"name": "Polish Złoty", "country": "PL"},
+    "RON": {"name": "Romanian Leu", "country": "RO"},
+    "SEK": {"name": "Swedish Krona", "country": "SE"},
+    "SGD": {"name": "Singapore Dollar", "country": "SG"},
+    "THB": {"name": "Thai Baht", "country": "TH"},
+    "TRY": {"name": "Turkish Lira", "country": "TR"},
+    "USD": {"name": "United States Dollar", "country": "US"},
+    "ZAR": {"name": "South African Rand", "country": "ZA"},
+  };
+
   final TextEditingController textEditingController = TextEditingController();
+  late List<String> currencies = currencyData.keys.toList();
 
   Future<void> convertCurrency() async {
     final String inputText = textEditingController.text;
@@ -151,22 +154,36 @@ class _CurrencyConvertorMaterialPageState
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    padding: EdgeInsets.only(left: 10, right: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
                     decoration: ddButton,
                     child: DropdownButton<String>(
-                      underline: SizedBox(),
+                      underline: const SizedBox(),
                       value: fromCurrency,
-                      items: currencies
-                          .map(
-                            (cur) =>
-                                DropdownMenuItem(value: cur, child: Text(cur)),
-                          )
-                          .toList(),
+                      // Add this to prevent the text from overflowing
+                      isExpanded: false,
+                      items: currencies.map((code) {
+                        final data = currencyData[code]!;
+                        return DropdownMenuItem(
+                          value: code,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              CountryFlag.fromCountryCode(
+                                data['country']!,
+                                height: 20,
+                                width: 28,
+                              ),
+                              const SizedBox(width: 12),
+                              Text("$code - ${data['name']}"),
+                            ],
+                          ),
+                        );
+                      }).toList(),
                       onChanged: (val) => setState(() => fromCurrency = val!),
                     ),
                   ),
 
-                  const Padding(
+                  Padding(
                     padding: const EdgeInsets.only(
                       left: 20.0,
                       right: 20.0,
@@ -177,18 +194,32 @@ class _CurrencyConvertorMaterialPageState
                   ),
 
                   Container(
-                    padding: EdgeInsets.only(left: 10, right: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
                     decoration: ddButton,
                     child: DropdownButton<String>(
-                      underline: SizedBox(),
+                      underline: const SizedBox(),
                       value: toCurrency,
-                      items: currencies
-                          .map(
-                            (cur) =>
-                                DropdownMenuItem(value: cur, child: Text(cur)),
-                          )
-                          .toList(),
-                      onChanged: (val) => setState(() => toCurrency = val!),
+                      // Add this to prevent the text from overflowing
+                      isExpanded: false,
+                      items: currencies.map((code) {
+                        final data = currencyData[code]!;
+                        return DropdownMenuItem(
+                          value: code,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              CountryFlag.fromCountryCode(
+                                data['country']!,
+                                height: 20,
+                                width: 28,
+                              ),
+                              const SizedBox(width: 12),
+                              Text("$code - ${data['name']}"),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (val) => setState(() => fromCurrency = val!),
                     ),
                   ),
                 ],
@@ -241,7 +272,7 @@ class _CurrencyConvertorMaterialPageState
                           ),
                           SizedBox(width: 8),
                           Text(
-                            'Processing...',
+                            'Converting...',
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
