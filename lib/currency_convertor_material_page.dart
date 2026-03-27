@@ -135,160 +135,165 @@ class _CurrencyConvertorMaterialPageState
         ),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              resultText.isNotEmpty
-                  ? resultText
-                  : '${result != 0 ? result.toStringAsFixed(2) : 0}',
-              style: TextStyle(
-                fontSize: 32.2,
-                fontWeight: FontWeight.bold,
-                color: const Color.fromARGB(255, 0, 0, 0),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(18.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    decoration: ddButton,
-                    child: DropdownButton<String>(
-                      underline: const SizedBox(),
-                      value: fromCurrency,
-                      // Add this to prevent the text from overflowing
-                      isExpanded: false,
-                      items: currencies.map((code) {
-                        final data = currencyData[code]!;
-                        return DropdownMenuItem(
-                          value: code,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              CountryFlag.fromCountryCode(
-                                data['country']!,
-                                height: 20,
-                                width: 28,
-                              ),
-                              const SizedBox(width: 12),
-                              Text("$code - ${data['name']}"),
-                            ],
-                          ),
-                        );
-                      }).toList(),
-                      onChanged: (val) => setState(() => fromCurrency = val!),
-                    ),
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 20.0,
-                      right: 20.0,
-                      top: 0.0,
-                      bottom: 0.0,
-                    ),
-                    child: Icon(Icons.arrow_forward),
-                  ),
-
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    decoration: ddButton,
-                    child: DropdownButton<String>(
-                      underline: const SizedBox(),
-                      value: toCurrency,
-                      // Add this to prevent the text from overflowing
-                      isExpanded: false,
-                      items: currencies.map((code) {
-                        final data = currencyData[code]!;
-                        return DropdownMenuItem(
-                          value: code,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              CountryFlag.fromCountryCode(
-                                data['country']!,
-                                height: 20,
-                                width: 28,
-                              ),
-                              const SizedBox(width: 12),
-                              Text("$code - ${data['name']}"),
-                            ],
-                          ),
-                        );
-                      }).toList(),
-                      onChanged: (val) => setState(() => fromCurrency = val!),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(18.0),
-              child: TextField(
-                controller: textEditingController,
-                style: const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
-                decoration: InputDecoration(
-                  hintText: "Enter Amount",
-                  hintStyle: const TextStyle(
-                    color: Color.fromARGB(255, 0, 0, 0),
-                  ),
-                  prefixIcon: const Icon(Icons.move_down_sharp),
-                  prefixIconColor: Colors.green,
-                  filled: true,
-                  fillColor: Colors.white,
-                  enabledBorder: border,
-                  focusedBorder: border,
-                ),
-                keyboardType: const TextInputType.numberWithOptions(
-                  decimal: true,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                resultText.isNotEmpty
+                    ? resultText
+                    : '${result != 0 ? result.toStringAsFixed(2) : 0}',
+                style: TextStyle(
+                  fontSize: 32.2,
+                  fontWeight: FontWeight.bold,
+                  color: const Color.fromARGB(255, 0, 0, 0),
                 ),
               ),
-            ),
-            // Button
-
-            // raised
-            // appears
-            TextButton(
-              onPressed: isLoading ? null : convertCurrency,
-              style: TextButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: Colors.black,
-                minimumSize: Size(100, 50),
-              ),
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 300), // Smooth fade time
-                child: isLoading
-                    ? const Row(
-                        key: ValueKey('loading'),
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.currency_exchange,
-                            size: 18,
-                            color: Colors.green,
-                          ),
-                          SizedBox(width: 8),
-                          Text(
-                            'Converting...',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ],
-                      )
-                    : const Text(
-                        'Convert',
-                        key: ValueKey('text'),
-                        style: TextStyle(fontWeight: FontWeight.bold),
+              Padding(
+                padding: const EdgeInsets.all(18.0),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        decoration: ddButton,
+                        child: DropdownButton<String>(
+                          underline: const SizedBox(),
+                          value: fromCurrency,
+                          // Add this to prevent the text from overflowing
+                          isExpanded: false,
+                          items: currencies.map((code) {
+                            final data = currencyData[code]!;
+                            return DropdownMenuItem(
+                              value: code,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  CountryFlag.fromCountryCode(
+                                    data['country']!,
+                                    height: 20,
+                                    width: 28,
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Text("$code - ${data['name']}"),
+                                ],
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (val) => setState(() => fromCurrency = val!),
+                        ),
                       ),
+                            
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 20.0,
+                          right: 20.0,
+                          top: 0.0,
+                          bottom: 0.0,
+                        ),
+                        child: Icon(Icons.arrow_forward),
+                      ),
+                            
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        decoration: ddButton,
+                        child: DropdownButton<String>(
+                          underline: const SizedBox(),
+                          value: toCurrency,
+                          // Add this to prevent the text from overflowing
+                          isExpanded: false,
+                          items: currencies.map((code) {
+                            final data = currencyData[code]!;
+                            return DropdownMenuItem(
+                              value: code,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  CountryFlag.fromCountryCode(
+                                    data['country']!,
+                                    height: 20,
+                                    width: 28,
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Text("$code - ${data['name']}"),
+                                ],
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (val) => setState(() => toCurrency = val!),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.all(18.0),
+                child: TextField(
+                  controller: textEditingController,
+                  style: const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+                  decoration: InputDecoration(
+                    hintText: "Enter Amount",
+                    hintStyle: const TextStyle(
+                      color: Color.fromARGB(255, 0, 0, 0),
+                    ),
+                    prefixIcon: const Icon(Icons.move_down_sharp),
+                    prefixIconColor: Colors.green,
+                    filled: true,
+                    fillColor: Colors.white,
+                    enabledBorder: border,
+                    focusedBorder: border,
+                  ),
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
+                ),
+              ),
+              // Button
+          
+              // raised
+              // appears
+              TextButton(
+                onPressed: isLoading ? null : convertCurrency,
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: Colors.black,
+                  minimumSize: Size(100, 50),
+                ),
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300), // Smooth fade time
+                  child: isLoading
+                      ? const Row(
+                          key: ValueKey('loading'),
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.currency_exchange,
+                              size: 18,
+                              color: Colors.green,
+                            ),
+                            SizedBox(width: 8),
+                            Text(
+                              'Converting...',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        )
+                      : const Text(
+                          'Convert',
+                          key: ValueKey('text'),
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

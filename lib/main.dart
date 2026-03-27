@@ -1,7 +1,25 @@
 import 'package:currency_convertor/currency_convertor_material_page.dart';
 import 'package:flutter/material.dart';
+import 'package:window_manager/window_manager.dart';
+import 'dart:io';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  // Initialize the window manager
+  await windowManager.ensureInitialized();
+
+  if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+    WindowOptions windowOptions = const WindowOptions(
+      size: Size(800, 400),          // Starting size
+      minimumSize: Size(800, 400),   // Fixed minimum width & height
+      center: true,
+      title: "Currency Converter",
+    );
+    windowManager.waitUntilReadyToShow(windowOptions, () async {
+      await windowManager.show();
+      await windowManager.focus();
+    });
+  }
   runApp(const MyApp());
 }
 
