@@ -2,16 +2,16 @@ import 'package:currency_convertor/currency_convertor_material_page.dart';
 import 'package:flutter/material.dart';
 import 'package:window_manager/window_manager.dart';
 import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Initialize the window manager
-  await windowManager.ensureInitialized();
 
-  if (Platform.isWindows || Platform.isMacOS || Platform.isLinux) {
+  if (!kIsWeb && (Platform.isWindows || Platform.isMacOS || Platform.isLinux)) {
+    await windowManager.ensureInitialized();
     WindowOptions windowOptions = const WindowOptions(
-      size: Size(800, 400),          // Starting size
-      minimumSize: Size(800, 400),   // Fixed minimum width & height
+      size: Size(800, 400),
+      minimumSize: Size(800, 400),
       center: true,
       title: "Currency Converter",
     );
@@ -20,8 +20,10 @@ void main() async{
       await windowManager.focus();
     });
   }
+
   runApp(const MyApp());
 }
+
 
 // Types of widgets
 // 1. Stateless Widget
