@@ -153,7 +153,7 @@ class _CurrencyConvertorMaterialPageState
                 padding: const EdgeInsets.all(18.0),
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
-                  child: Row(
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
@@ -188,12 +188,11 @@ class _CurrencyConvertorMaterialPageState
                             
                       Padding(
                         padding: const EdgeInsets.only(
-                          left: 20.0,
-                          right: 20.0,
-                          top: 0.0,
-                          bottom: 0.0,
+            
+                          top: 10.0,
+                          bottom: 10.0,
                         ),
-                        child: Icon(Icons.arrow_forward),
+                        child: Icon(Icons.arrow_downward,color: Colors.black,),
                       ),
                             
                       Container(
@@ -230,24 +229,27 @@ class _CurrencyConvertorMaterialPageState
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(18.0),
-                child: TextField(
-                  controller: textEditingController,
-                  style: const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
-                  decoration: InputDecoration(
-                    hintText: "Enter Amount",
-                    hintStyle: const TextStyle(
-                      color: Color.fromARGB(255, 0, 0, 0),
+                padding: const EdgeInsets.all(10.0),
+                child: SizedBox(
+                  width: 400,
+                  child: TextField(
+                    controller: textEditingController,
+                    style: const TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+                    decoration: InputDecoration(
+                      hintText: "Enter Amount",
+                      hintStyle: const TextStyle(
+                        color: Color.fromARGB(255, 0, 0, 0),
+                      ),
+                      prefixIcon: const Icon(Icons.move_down_sharp),
+                      prefixIconColor: Colors.green,
+                      filled: true,
+                      fillColor: Colors.white,
+                      enabledBorder: border,
+                      focusedBorder: border,
                     ),
-                    prefixIcon: const Icon(Icons.move_down_sharp),
-                    prefixIconColor: Colors.green,
-                    filled: true,
-                    fillColor: Colors.white,
-                    enabledBorder: border,
-                    focusedBorder: border,
-                  ),
-                  keyboardType: const TextInputType.numberWithOptions(
-                    decimal: true,
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
                   ),
                 ),
               ),
@@ -266,8 +268,8 @@ class _CurrencyConvertorMaterialPageState
                   duration: const Duration(milliseconds: 300), // Smooth fade time
                   child: isLoading
                       ? const Row(
+                        mainAxisSize: MainAxisSize.min,
                           key: ValueKey('loading'),
-                          mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(
                               Icons.currency_exchange,
@@ -288,7 +290,8 @@ class _CurrencyConvertorMaterialPageState
                       : const Text(
                           'Convert',
                           key: ValueKey('text'),
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: TextStyle(fontWeight: FontWeight.bold,
+                          fontSize: 18),
                         ),
                 ),
               ),

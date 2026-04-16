@@ -10,8 +10,7 @@ void main() async {
   if (!kIsWeb && (Platform.isWindows || Platform.isMacOS || Platform.isLinux)) {
     await windowManager.ensureInitialized();
     WindowOptions windowOptions = const WindowOptions(
-      size: Size(800, 400),
-      minimumSize: Size(800, 400),
+      minimumSize: Size(400,600),
       center: true,
       title: "Currency Converter",
     );
