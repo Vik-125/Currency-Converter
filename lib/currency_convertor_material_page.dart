@@ -1,3 +1,4 @@
+import 'package:currency_convertor/api.dart';
 import 'package:http/http.dart'
     as http; // this lib is used to make a web req(API call).
 import 'dart:convert'; // This lib is used to convert the JSON data into dart readable data
@@ -16,8 +17,8 @@ class _CurrencyConvertorMaterialPageState
     extends State<CurrencyConvertorMaterialPage> {
   double result = 0;
   String resultText = "";
-  String fromCurrency = "INR";
-  String toCurrency = "USD";
+  String fromCurrency = "USD";
+  String toCurrency = "EUR";
   bool isLoading = false;
 
   final Map<String, Map<String, String>> currencyData = {
@@ -80,16 +81,16 @@ class _CurrencyConvertorMaterialPageState
     setState(() => isLoading = true);
 
     try {
-      //await Future.delayed(const Duration(seconds: 3));
+
       final url = Uri.parse(
-        'https://api.frankfurter.app/latest?base=$fromCurrency',
+        'https://v6.exchangerate-api.com/v6/$api_key/latest/${fromCurrency.trim()}',
       );
 
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(response.body);
-        final double exchangeRate = data['rates'][toCurrency];
+        final double exchangeRate = data['conversion_rates'][toCurrency];
 
         setState(() {
           resultText =
@@ -159,6 +160,8 @@ class _CurrencyConvertorMaterialPageState
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 12),
                         decoration: ddButton,
+
+                        // First Drop-Down options (i.e for choosing First currency)
                         child: DropdownButton<String>(
                           underline: const SizedBox(),
                           value: fromCurrency,
@@ -182,19 +185,31 @@ class _CurrencyConvertorMaterialPageState
                               ),
                             );
                           }).toList(),
-                          onChanged: (val) => setState(() => fromCurrency = val!),
+                          onChanged: (val) =>
+                              setState(() => fromCurrency = val!),
                         ),
                       ),
-                            
+
+                      // Swap button between the currencies
                       Padding(
-                        padding: const EdgeInsets.only(
-            
-                          top: 10.0,
-                          bottom: 10.0,
+                        padding: const EdgeInsets.symmetric(vertical: 10.0),
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.compare_arrows, // swap icon
+                            color: Colors.black,
+                            size: 32,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              final temp = fromCurrency;
+                              fromCurrency = toCurrency;
+                              toCurrency = temp;
+                            });
+                          },
                         ),
-                        child: Icon(Icons.arrow_downward,color: Colors.black,),
                       ),
-                            
+
+                      // Second Drop-Down options (i.e for choosing second currency)
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 12),
                         decoration: ddButton,
@@ -228,6 +243,9 @@ class _CurrencyConvertorMaterialPageState
                   ),
                 ),
               ),
+
+              SizedBox(height: 10),
+              // Space for entering the amount.
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: SizedBox(
@@ -253,10 +271,8 @@ class _CurrencyConvertorMaterialPageState
                   ),
                 ),
               ),
-              // Button
-          
-              // raised
-              // appears
+
+              // Animation of the convert button
               TextButton(
                 onPressed: isLoading ? null : convertCurrency,
                 style: TextButton.styleFrom(
@@ -265,10 +281,12 @@ class _CurrencyConvertorMaterialPageState
                   minimumSize: Size(100, 50),
                 ),
                 child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 300), // Smooth fade time
+                  duration: const Duration(
+                    milliseconds: 300,
+                  ), // Smooth fade time
                   child: isLoading
                       ? const Row(
-                        mainAxisSize: MainAxisSize.min,
+                          mainAxisSize: MainAxisSize.min,
                           key: ValueKey('loading'),
                           children: [
                             Icon(
@@ -287,11 +305,14 @@ class _CurrencyConvertorMaterialPageState
                             ),
                           ],
                         )
+                      // The last button for allowing convertion to happen.
                       : const Text(
                           'Convert',
                           key: ValueKey('text'),
-                          style: TextStyle(fontWeight: FontWeight.bold,
-                          fontSize: 18),
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
                         ),
                 ),
               ),

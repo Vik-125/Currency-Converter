@@ -24,11 +24,6 @@ void main() async {
 }
 
 
-// Types of widgets
-// 1. Stateless Widget
-// 2. Stateful widget
-// 3. inherited widget  ( this is not for UI )
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
