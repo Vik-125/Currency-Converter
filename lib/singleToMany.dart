@@ -1,7 +1,6 @@
 import 'package:currency_convertor/api.dart';
-import 'package:http/http.dart'
-    as http; 
-import 'dart:convert'; 
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:country_flags/country_flags.dart';
@@ -71,6 +70,12 @@ class _SingleToManyPageState extends State<SingleToManyPage> {
       });
       return;
     }
+    if(toCurrencies.isEmpty){
+      setState(() {
+        resultText = "$inputAmt $fromCurrency";
+      });
+      return;
+    }
     setState(() => isLoading = true);
 
     try {
@@ -83,16 +88,17 @@ class _SingleToManyPageState extends State<SingleToManyPage> {
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(response.body);
         final Map<String, dynamic> rates = data['conversion_rates'];
-List<String> results = [];
-      for (var code in toCurrencies) {
-        if (code == fromCurrency) continue;
-        double exchangeRate = rates[code];
-        double converted = inputAmt * exchangeRate;
-        results.add("$inputAmt $fromCurrency = ${converted.toStringAsFixed(2)} $code");
-      }
+        List<String> results = [];
+        for (var code in toCurrencies) {
+          if (code == fromCurrency) continue;
+          double exchangeRate = rates[code];
+          double converted = inputAmt * exchangeRate;
+          results.add(
+            "$inputAmt $fromCurrency = ${converted.toStringAsFixed(2)} $code",
+          );
+        }
         setState(() {
-          resultText =
-              resultText = results.join("\n");
+          resultText = resultText = results.join("\n");
         });
       } else {
         if (kDebugMode) print('Server error: ${response.statusCode}');
@@ -188,12 +194,13 @@ List<String> results = [];
                         ),
                       ),
 
+                      SizedBox(height: 5),
                       // Down arrow.
                       Icon(Icons.arrow_downward_rounded),
-
+                      SizedBox(height: 5),
                       // Drop-Down options (i.e for choosing second currency)
                       Column(
-                        children: toCurrencies.asMap().entries.map((entry){
+                        children: toCurrencies.asMap().entries.map((entry) {
                           int index = entry.key;
                           String selected = entry.value;
 
@@ -204,41 +211,60 @@ List<String> results = [];
                             child: DropdownButton<String>(
                               underline: const SizedBox(),
                               value: selected,
-                              items: currencies.map((code){
+                              items: currencies.map((code) {
                                 final data = currencyData[code]!;
                                 return DropdownMenuItem(
                                   value: code,
-                                  child: Row(children: [
-                                    CountryFlag.fromCountryCode(data['country']!, height: 20, width: 28),
-                                    const SizedBox(width: 12),
-                                    Text("$code - ${data['name']}"),
-                                  ],
+                                  child: Row(
+                                    children: [
+                                      CountryFlag.fromCountryCode(
+                                        data['country']!,
+                                        height: 20,
+                                        width: 28,
+                                      ),
+                                      const SizedBox(width: 12),
+                                      Text("$code - ${data['name']}"),
+                                    ],
                                   ),
-                                  );
+                                );
                               }).toList(),
-                              onChanged: (val){
-                                setState((){
+                              onChanged: (val) {
+                                setState(() {
                                   toCurrencies[index] = val!;
                                 });
                               },
-                            )
+                            ),
                           );
                         }).toList(),
-                        
                       ),
-                      // '+' button for increasing the number of toChange currencies.
-                      IconButton(icon: Icon(Icons.add_circle),
-                      onPressed: (){
-                        setState(() {
-                          toCurrencies.add(currencies.first);
-                        });
-                      },
+                      Row(
+                        children: [
+                          // '+' button for increasing the number of toChange currencies.
+                          IconButton(
+                            icon: Icon(Icons.add_circle,color: Colors.black,),
+                            onPressed: () {
+                              setState(() {
+                                toCurrencies.add(currencies.first);
+                              });
+                            },
+                          ),
+                          // '-' button for decreasing the number of toChange currencies.
+                          IconButton(
+                            icon: Icon(Icons.remove_circle,color: Colors.black,),
+                            onPressed: () {
+                              setState(() {
+                                if (toCurrencies.isNotEmpty) {
+                                  toCurrencies.removeLast();
+                                }
+                              });
+                            },
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
               ),
-              
 
               SizedBox(height: 10),
               // Space for entering the amount.
