@@ -1,4 +1,4 @@
-import 'package:currency_convertor/currency_convertor_material_page.dart';
+import 'package:currency_convertor/home.dart';
 import 'package:flutter/material.dart';
 import 'package:window_manager/window_manager.dart';
 import 'dart:io';
@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: CurrencyConvertorMaterialPage(),
+      home: HomePage(),
     );
   }
 }
