@@ -21,7 +21,7 @@ It converts currencies in real-time using an external API.
 - Flutter
 - Dart
 - HTTP package
-- Frankfurter API
+- ExcahngeRate API
 - window_manager
 - country_flags
 
