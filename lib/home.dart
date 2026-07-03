@@ -17,9 +17,9 @@ class HomePage extends StatelessWidget {
       textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.w300),
     );
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 124, 168),
+      backgroundColor: const Color.fromARGB(255, 185, 184, 184),
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 39, 117, 252),
+        backgroundColor: const Color.fromARGB(255, 82, 136, 230),
         title: Text(
           "Choose Mode",
           style: TextStyle(fontSize: 25, fontWeight: FontWeight.w700),
@@ -30,8 +30,14 @@ class HomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ElevatedButton(
-              style : commonButtonStyle,
-              child: Text("Single To Single Mode"),
+              style: commonButtonStyle,
+              child: Text(
+                "Single To Single Mode",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -41,8 +47,14 @@ class HomePage extends StatelessWidget {
             ),
             SizedBox(height: 80),
             ElevatedButton(
-              style : commonButtonStyle,
-              child: Text("Single To Multiple mode"),
+              style: commonButtonStyle,
+              child: Text(
+                "Single To Multiple Mode",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
               onPressed: () {
                 Navigator.push(
                   context,

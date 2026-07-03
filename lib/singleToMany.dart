@@ -60,7 +60,7 @@ class _SingleToManyPageState extends State<SingleToManyPage> {
 
     if (inputAmt == null) {
       setState(() {
-        resultText = "That not a NUMBER , you DUMB!!!";
+        resultText = "That not a number!!!";
       });
       return;
     }
@@ -88,6 +88,7 @@ class _SingleToManyPageState extends State<SingleToManyPage> {
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(response.body);
         final Map<String, dynamic> rates = data['conversion_rates'];
+
         List<String> results = [];
         for (var code in toCurrencies) {
           if (code == fromCurrency) continue;
@@ -131,7 +132,7 @@ class _SingleToManyPageState extends State<SingleToManyPage> {
       borderRadius: BorderRadius.all(Radius.circular(60)),
     );
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 124, 168),
+      backgroundColor: const Color.fromARGB(255, 212, 155, 174),
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 39, 117, 252),
         title: const Text(
@@ -195,8 +196,10 @@ class _SingleToManyPageState extends State<SingleToManyPage> {
                       ),
 
                       SizedBox(height: 5),
+                      
                       // Down arrow.
                       Icon(Icons.arrow_downward_rounded),
+
                       SizedBox(height: 5),
                       // Drop-Down options (i.e for choosing second currency)
                       Column(
@@ -239,6 +242,7 @@ class _SingleToManyPageState extends State<SingleToManyPage> {
                       ),
                       Row(
                         children: [
+
                           // '+' button for increasing the number of toChange currencies.
                           IconButton(
                             icon: Icon(Icons.add_circle,color: Colors.black,),
@@ -248,6 +252,7 @@ class _SingleToManyPageState extends State<SingleToManyPage> {
                               });
                             },
                           ),
+
                           // '-' button for decreasing the number of toChange currencies.
                           IconButton(
                             icon: Icon(Icons.remove_circle,color: Colors.black,),

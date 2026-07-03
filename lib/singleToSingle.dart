@@ -9,12 +9,10 @@ import 'package:country_flags/country_flags.dart';
 class SingleToSinglePage extends StatefulWidget {
   const SingleToSinglePage({super.key});
   @override
-  State<SingleToSinglePage> createState() =>
-      _SingleToSinglePageState();
+  State<SingleToSinglePage> createState() => _SingleToSinglePageState();
 }
 
-class _SingleToSinglePageState
-    extends State<SingleToSinglePage> {
+class _SingleToSinglePageState extends State<SingleToSinglePage> {
   double result = 0;
   String resultText = "";
   String fromCurrency = "USD";
@@ -68,7 +66,7 @@ class _SingleToSinglePageState
     }
     if (inputAmt == null) {
       setState(() {
-        resultText = "That not a NUMBER , you DUMB!!!";
+        resultText = "That not a number!!!";
       });
       return;
     }
@@ -81,7 +79,6 @@ class _SingleToSinglePageState
     setState(() => isLoading = true);
 
     try {
-
       final url = Uri.parse(
         'https://v6.exchangerate-api.com/v6/$api_key/latest/${fromCurrency.trim()}',
       );
@@ -112,8 +109,8 @@ class _SingleToSinglePageState
     // For adding styles to the TextField.
     final border = OutlineInputBorder(
       borderSide: BorderSide(
-        color: const Color.fromARGB(255, 226, 52, 40),
-        width: 2,
+        color: const Color.fromARGB(255, 0, 0, 0),
+        width: 1,
         style: BorderStyle.solid,
         strokeAlign: BorderSide.strokeAlignInside,
       ),
@@ -127,7 +124,7 @@ class _SingleToSinglePageState
       borderRadius: BorderRadius.all(Radius.circular(60)),
     );
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 124, 168),
+      backgroundColor: const Color.fromARGB(255, 163, 110, 128),
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 39, 117, 252),
         title: const Text(
@@ -180,7 +177,12 @@ class _SingleToSinglePageState
                                     width: 28,
                                   ),
                                   const SizedBox(width: 12),
-                                  Text("$code - ${data['name']}"),
+                                  Text(
+                                    "$code - ${data['name']}",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
                                 ],
                               ),
                             );
@@ -231,7 +233,12 @@ class _SingleToSinglePageState
                                     width: 28,
                                   ),
                                   const SizedBox(width: 12),
-                                  Text("$code - ${data['name']}"),
+                                  Text(
+                                    "$code - ${data['name']}",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
                                 ],
                               ),
                             );
@@ -256,6 +263,7 @@ class _SingleToSinglePageState
                     decoration: InputDecoration(
                       hintText: "Enter Amount",
                       hintStyle: const TextStyle(
+                        fontWeight: FontWeight.w700,
                         color: Color.fromARGB(255, 0, 0, 0),
                       ),
                       prefixIcon: const Icon(Icons.move_down_sharp),
